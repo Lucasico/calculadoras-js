@@ -1,74 +1,70 @@
-//screen
-const screen = document.getElementsByClassName("screen");
+//keys
+const keys = document.querySelectorAll('.buttons .numbers button:not(#clear)');
+
+const clearButton = document.querySelector('#clear');
 
 //operations
-const equal = document.getElementById("equal");
-const subtraction = document.getElementById("subtraction");
-const addition = document.getElementById("addition");
-const multiplication = document.getElementById("multiplication");
-const division = document.getElementById("division");
-const clear = document.getElementById("clear");
-//numbers
-const zero = document.getElementById("zero");
-const one = document.getElementById("one");
-const two = document.getElementById("two");
-const three = document.getElementById("three");
-const four = document.getElementById("four");
-const five = document.getElementById("five");
-const seven = document.getElementById("seven");
-const eight = document.getElementById("eight");
-const nine = document.getElementById("nine");
+const operations = document.querySelectorAll('.buttons .operators button');
 
-const comma = document.getElementById("comma");
+//screen
+const screen = document.querySelector('.screen');
 
-zero.onclick = () => {
-  console.log("value", zero.innerText);
+clearButton.addEventListener('click', () => (screen.innerText = '0'));
+
+//events keys
+keys.forEach((key) => {
+    //add event list to event onclick
+    key.addEventListener('click', () => {
+        // get attribute by name
+        const keyValue = key.getAttribute('data-val');
+
+        insertValue(keyValue);
+    });
+});
+
+//events operations
+operations.forEach((opr) => {
+    opr.addEventListener('click', () => {
+        if (opr.innerText === '=') {
+            const isInvalid = validOperation();
+            if (!isInvalid) {
+                showResult(screen.innerText);
+            } else {
+                screen.innerText = 'Inválido dividir por zero';
+            }
+        } else {
+            const oprValue = opr.getAttribute('data-val');
+            insertValue(oprValue);
+        }
+    });
+});
+
+const insertValue = (value) => {
+    if (screen.innerText.length > 14) return;
+
+    replaceClearButtonValue();
+
+    const formattedValue = value === ',' ? '.' : value;
+    screen.innerText = screen.innerText + formattedValue;
 };
 
-one.onclick = () => {
-  console.log("value", one.innerText);
+const showResult = (operation) => (screen.innerText = eval(operation));
+
+const validOperation = () => {
+    const sizeScreenItem = screen.innerText.length;
+    const penultimateItemToBeDisplay = screen.innerText[sizeScreenItem - 2];
+    const lastItemToBeDisplay = screen.innerText[sizeScreenItem - 1];
+    let error = false;
+
+    if (penultimateItemToBeDisplay === '/' && lastItemToBeDisplay === '0') {
+        error = true;
+    }
+
+    return error;
 };
 
-two.onclick = () => {
-  console.log("value", two.innerText);
+const replaceClearButtonValue = () => {
+    if (screen.innerText && screen.innerText[0] === '0') {
+        screen.innerText = screen.innerText.substr(1);
+    }
 };
-
-three.onclick = () => {
-  console.log("value", three.innerText);
-};
-
-four.onclick = () => {
-  console.log("value", four.innerText);
-};
-
-five.onclick = () => {
-  console.log("value", five.innerText);
-};
-
-six.onclick = () => {
-  console.log("value", six.innerText);
-};
-
-seven.onclick = () => {
-  console.log("value", seven.innerText);
-};
-
-eight.onclick = () => {
-  console.log("value", eight.innerText);
-};
-
-nine.onclick = () => {
-  console.log("value", nine.innerText);
-};
-
-comma.onclick = () => {
-  console.log("value", comma.innerText);
-};
-
-clear.onclick = () => {
-  console.log("value", clear.innerText);
-};
-
-function mouse() {
-  console.log("screen", screen[0].innerText);
-}
